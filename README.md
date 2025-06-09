@@ -1,69 +1,93 @@
-# Anime ETL Project
+# 🧩 Anime ETL & Dashboard Project
 
-![Anime Banner](https://user-images.githubusercontent.com/your_image_link_here)  <!-- Optional: Add an anime-themed image or your dashboard screenshot -->
-
-## Project Overview
-
-This project demonstrates an end-to-end **ETL (Extract, Transform, Load)** pipeline focused on anime data. Using the [Jikan API](https://jikan.moe/), the pipeline extracts metadata about anime series, transforms and cleans the data, and loads it into a MySQL database for further analysis.
-
-The goal is to showcase data engineering skills by building a reproducible workflow that culminates in insightful dashboards.
+A complete **end-to-end ETL (Extract → Transform → Load)** pipeline that sources anime data from the [Jikan API](https://jikan.moe), processes and stores it in MySQL, and ends in a professional **Power BI dashboard**. This notebook-based project demonstrates data engineering concepts and provides interactive insights into popular anime shows.
 
 ---
 
-## Project Components
+## 🖼️ Dashboard Preview
 
-### 1. Data Extraction
+![Dashboard Preview](dashboard_preview.png)
 
-- Fetches anime data including title, episodes, rating, genres, airing status, and popularity.
-- Utilizes the public [Jikan REST API](https://jikan.moe/) for reliable and up-to-date anime metadata.
-
-### 2. Data Transformation
-
-- Cleans and preprocesses raw API data.
-- Handles missing values, type conversions, and filters relevant attributes.
-- Converts data into a structured format ready for loading.
-
-### 3. Data Loading
-
-- Loads transformed data into a MySQL database using Python’s `mysql-connector` package.
-- Supports incremental data insertion to update the database efficiently.
+*Above is a snapshot of the final Power BI dashboard illustrating top anime insights.*
 
 ---
 
-## Dashboard
+## 🔍 Project Overview
 
-> **Note:** The dashboard is created externally using Power BI / Tableau (or your tool).
+### 1. **Extract**
+- Pulls real-time anime metadata — including *title*, *episodes*, *score*, *rank*, *popularity*, *members*, and *genres* — using the **Jikan REST API**.
 
-- Visualizes key anime insights such as rating distributions, popularity trends, episode counts, and genre analysis.
-- Helps users explore the anime landscape interactively.
-- [Optional] Screenshot or GIF of the dashboard here:
+### 2. **Transform**
+- Cleans the data to remove nulls and ensure data accuracy.
+- Normalizes and selects meaningful columns.
+- Conducts type conversions for consistency and analytical readiness.
 
-![Dashboard Screenshot](https://user-images.githubusercontent.com/your_dashboard_image_link_here)
+### 3. **Load**
+- Inserts the processed data into a **MySQL** database using `mysql-connector-python`, creating a clean, queryable dataset.
 
----
-
-## Technologies & Libraries Used
-
-- Python 3.x
-- Jupyter Notebook (`Anime_ETL_Project.ipynb`)
-- `requests` (API calls)
-- `pandas` (data manipulation)
-- `mysql-connector-python` (database connection)
-- MySQL Server (local or cloud)
-- Power BI / Tableau (dashboard visualization)
+### 4. **Visualize**
+- Uses **Power BI** to analyze key metrics:
+  - Most popular anime by members count
+  - Highest-rated shows and correlation with popularity
+  - Distribution of anime types and member engagement
+  - Visual insights into rankings and score trends
 
 ---
 
-## Setup Instructions
+## 💻 Technologies & Libraries
 
-### Prerequisites
+| Tool                        | Role in Project                              |
+|-----------------------------|----------------------------------------------|
+| Python 3.x & Jupyter Notebook | Writing and orchestrating the ETL pipeline |
+| `requests`, `pandas`        | Data extraction and transformation modules   |
+| `mysql-connector-python`    | Facilitates data loading into MySQL         |
+| MySQL Server                | Central storage used for structured data    |
+| Power BI Desktop            | Creates interactive and shareable dashboard |
+| Git & GitHub                | Version control and public portfolio         |
 
-- Python 3.x installed
-- MySQL Server installed and running
-- Git installed
+---
 
-### Clone the repository
+## 📂 Folder Structure
 
-```bash
-git clone https://github.com/Gourav180420/anime_project.git
-cd anime_project
+
+---
+
+## ⚙️ How to Run the Entire Pipeline
+
+### Prerequisites:
+- **Python 3.x** installed  
+- **MySQL Server** installed and running  
+- **Power BI Desktop** for dashboard viewing  
+- **Git** installed
+
+---
+
+### Step-by-Step Setup:
+
+1. **Clone this repository:**
+    ```bash
+    git clone https://github.com/Gourav180420/anime_project.git
+    cd anime_project
+    ```
+
+2. **Create and activate a virtual environment (optional but recommended):**
+    ```bash
+    python -m venv venv
+    venv\Scripts\activate            # Windows
+    # source venv/bin/activate      # macOS/Linux
+    ```
+
+3. **Install the required Python packages:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. **Prepare database credentials:**
+   - Copy `scripts/config_example.py` to `scripts/config.py`
+   - Add the following (replace with your MySQL details):
+
+   ```python
+   DB_HOST = 'localhost'
+   DB_USER = 'your_username'
+   DB_PASSWORD = 'your_password'
+   DB_NAME = 'anime_db'
