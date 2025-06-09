@@ -1,7 +1,13 @@
+# Ignore data files
+data/*.csv
+data/*.xlsx
+
+# Ignore Power BI files
+*.pbix
+
+# Ignore Python cache
 __pycache__/
-.ipynb_checkpoints/
 *.pyc
-*.pyo
-*.pyd
-.DS_Store
-.env
+
+# Ignore logs
+*.log
