@@ -1,23 +1,13 @@
-# Ignore data files (keep only final cleaned ones if needed)
-data/*.csv
-data/*.xlsx
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore real config file
+scripts/config.py
 
 # Ignore Power BI files
 *.pbix
 
-# Ignore Python cache files and folders
-__pycache__/
-*.pyc
-
-# Ignore Jupyter notebook checkpoints
-.ipynb_checkpoints/
-
-# Ignore environment files (never upload secrets)
-.env
-*.env
-
-# Ignore logs
-*.log
-
-# VS Code settings (optional)
-.vscode/
+# Ignore large data files (optional)
+data/*.csv
+data/*.xlsx
