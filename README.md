@@ -4,7 +4,7 @@ This project is an end-to-end **ETL (Extract, Transform, Load)** pipeline for an
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 This project demonstrates:
 - How to extract anime metadata using the **Jikan API** (unofficial MyAnimeList API).
@@ -41,9 +41,7 @@ anime_project/
 ├── requirements.txt # Python dependencies
 ├── README.md # Project README file
 
-yaml
-Copy
-Edit
+
 
 ---
 
@@ -94,17 +92,13 @@ The final dashboard includes:
    cd anime_project
 Set up the virtual environment
 
-bash
-Copy
-Edit
+
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 Run the ETL scripts
 
-bash
-Copy
-Edit
+
 python scripts/extract_data.py
 python scripts/transform_data.py
 python load_to_db/load_to_mysql.py
@@ -129,7 +123,7 @@ Jikan API for anime data
 Python libraries: requests, pandas, sqlalchemy, etc.
 
  Repository
-📎 GitHub Repo: https://github.com/Gourav180420/anime_project
+ GitHub Repo: https://github.com/Gourav180420/anime_project
 
 License
 This project is for academic and learning purposes. Feel free to fork and extend it!
