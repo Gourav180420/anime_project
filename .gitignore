@@ -11,3 +11,4 @@ scripts/config.py
 # Ignore large data files (optional)
 data/*.csv
 data/*.xlsx
+.ipynb_checkpoints/
