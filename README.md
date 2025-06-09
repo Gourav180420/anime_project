@@ -82,6 +82,7 @@ The final dashboard includes:
 -  Filters (Slicers): Type, Genre, Score
 
 >  File: `dashboard/anime_dashboard.pbix`
+![Dashboard Screenshot](images/dashboard_preview.png)
 
 ---
 
