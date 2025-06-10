@@ -9,3 +9,7 @@ __pycache__/
 data/*.csv
 data/*.xlsx
 .ipynb_checkpoints/
+venv/
+env/
+.vscode/
+
