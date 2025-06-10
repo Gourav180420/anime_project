@@ -2,9 +2,6 @@
 __pycache__/
 *.pyc
 
-# Ignore real config file
-scripts/config.py
-
 # Ignore Power BI files
 *.pbix
 
