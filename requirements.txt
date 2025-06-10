@@ -1,4 +1,7 @@
 requests
-pandas
-mysql-connector-python
 jupyter
+pandas
+sqlalchemy
+pymysql
+
+
