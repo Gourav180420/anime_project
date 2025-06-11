@@ -1,93 +1,77 @@
 # 🧩 Anime ETL & Dashboard Project
 
-A complete **end-to-end ETL (Extract → Transform → Load)** pipeline that sources anime data from the [Jikan API](https://jikan.moe), processes and stores it in MySQL, and ends in a professional **Power BI dashboard**. This notebook-based project demonstrates data engineering concepts and provides interactive insights into popular anime shows.
+A complete end-to-end ETL (Extract → Transform → Load) pipeline that sources anime data from the [Jikan API](https://jikan.moe), processes it using Python, stores it in MySQL, and visualizes insights in a Power BI dashboard.
 
 ---
 
 ## 🖼️ Dashboard Preview
 
-![Dashboard Preview](dashboard_preview.png)
-
-*Above is a snapshot of the final Power BI dashboard illustrating top anime insights.*
+![Dashboard Preview](dashboard/dashboard_preview.png)
 
 ---
 
-## 🔍 Project Overview
+## ⚙️ Project Workflow
 
-### 1. **Extract**
-- Pulls real-time anime metadata — including *title*, *episodes*, *score*, *rank*, *popularity*, *members*, and *genres* — using the **Jikan REST API**.
+This project is automated by a main pipeline script (`main.py`) that executes three core stages in order:
 
-### 2. **Transform**
-- Cleans the data to remove nulls and ensure data accuracy.
-- Normalizes and selects meaningful columns.
-- Conducts type conversions for consistency and analytical readiness.
+1.  **Extract (`scripts/data_collection.py`):** Connects to the Jikan REST API to fetch real-time data on the top anime shows. The raw data is saved to `data/raw/top_anime.csv`.
 
-### 3. **Load**
-- Inserts the processed data into a **MySQL** database using `mysql-connector-python`, creating a clean, queryable dataset.
+2.  **Transform (`scripts/data_cleaning.py`):** Reads the raw data, selects only the essential columns (`mal_id`, `title`, `type`, `score`, `genres`), and cleans the data for consistency. The processed data is saved to `data/processed/cleaned_anime.csv`.
 
-### 4. **Visualize**
-- Uses **Power BI** to analyze key metrics:
-  - Most popular anime by members count
-  - Highest-rated shows and correlation with popularity
-  - Distribution of anime types and member engagement
-  - Visual insights into rankings and score trends
+3.  **Load (`scripts/load_to_db.py`):** Connects to a MySQL database, creates a clean `anime` table, and loads the transformed data into it for analysis.
 
 ---
 
 ## 💻 Technologies & Libraries
 
-| Tool                        | Role in Project                              |
-|-----------------------------|----------------------------------------------|
-| Python 3.x & Jupyter Notebook | Writing and orchestrating the ETL pipeline |
-| `requests`, `pandas`        | Data extraction and transformation modules   |
-| `mysql-connector-python`    | Facilitates data loading into MySQL         |
-| MySQL Server                | Central storage used for structured data    |
-| Power BI Desktop            | Creates interactive and shareable dashboard |
-| Git & GitHub                | Version control and public portfolio         |
+| Tool | Role in Project |
+|---|---|
+| Python 3.x | Writing and orchestrating the ETL pipeline |
+| `requests`, `pandas` | Data extraction and transformation |
+| `SQLAlchemy`, `PyMySQL` | Loading data into MySQL |
+| MySQL Server | Central storage for structured data |
+| Power BI Desktop | Creating the interactive dashboard |
+| Git & GitHub | Version control and portfolio hosting |
 
 ---
 
-## 📂 Folder Structure
-
-
----
-
-## ⚙️ How to Run the Entire Pipeline
+## 🚀 How to Run the Entire Pipeline
 
 ### Prerequisites:
-- **Python 3.x** installed  
-- **MySQL Server** installed and running  
-- **Power BI Desktop** for dashboard viewing  
-- **Git** installed
-
----
+- Python 3.x installed
+- MySQL Server installed and running
+- Git installed
 
 ### Step-by-Step Setup:
 
-1. **Clone this repository:**
+1.  **Clone this repository:**
     ```bash
-    git clone https://github.com/Gourav180420/anime_project.git
+    git clone [https://github.com/Gourav180420/anime_project.git](https://github.com/Gourav180420/anime_project.git)
     cd anime_project
     ```
 
-2. **Create and activate a virtual environment (optional but recommended):**
+2.  **Create and activate a virtual environment (recommended):**
     ```bash
+    # Create the environment
     python -m venv venv
-    venv\Scripts\activate            # Windows
-    # source venv/bin/activate      # macOS/Linux
+    # Activate on Windows
+    venv\Scripts\activate
+    # Activate on macOS/Linux
+    # source venv/bin/activate
     ```
 
-3. **Install the required Python packages:**
+3.  **Install the required Python packages:**
     ```bash
     pip install -r requirements.txt
     ```
 
-4. **Prepare database credentials:**
-   - Copy `scripts/config_example.py` to `scripts/config.py`
-   - Add the following (replace with your MySQL details):
+4.  **Prepare database credentials:**
+   - Make sure your MySQL user, password, and database name in `config.py` match your local setup.
 
-   ```python
-   DB_HOST = 'localhost'
-   DB_USER = 'your_username'
-   DB_PASSWORD = 'your_password'
-   DB_NAME = 'anime_db'
+5.  **Run the pipeline:**
+   - Execute the main script from the root directory. This will run the entire ETL process.
+    ```bash
+    python main.py
+    ```
+6. **View the Dashboard:**
+    - Connect Power BI to your `anime_db` in MySQL to see the live data.
