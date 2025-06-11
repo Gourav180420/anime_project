@@ -1,39 +1,34 @@
+# scripts/data_cleaning.py
 import pandas as pd
 import os
-from pathlib import Path
+import ast
+
+RAW_FILE_PATH = "data/raw/top_anime.csv"
+PROCESSED_DATA_DIR = "data/processed"
+PROCESSED_FILE_PATH = os.path.join(PROCESSED_DATA_DIR, "cleaned_anime.csv")
 
 def clean_anime_data():
-    # 1. Create absolute paths
-    raw_path = Path(r"C:\Users\mishr\Desktop\anime_project\data\raw\top_anime.csv")
-    processed_path = Path(r"C:\Users\mishr\Desktop\anime_project\data\processed\cleaned_anime.csv")
-    
-    # 2. Verify paths
-    print(f"Raw data path: {raw_path}")
-    print(f"File exists? {raw_path.exists()}")
-    
-    # 3. Load and clean data
-    print("Loading raw data...")
-    raw_data = pd.read_csv(raw_path)
-    
-    # 4. Perform cleaning
-    print("Cleaning data...")
-    clean_data = raw_data.copy()  # Start with a copy of raw data
-    
-    # Example cleaning steps (modify as needed):
-    # - Select specific columns
-    clean_data = clean_data[['mal_id', 'title', 'type', 'score', 'genres']]
-    
-    # - Clean genres (convert string to list)
-    clean_data['genres'] = clean_data['genres'].apply(
-        lambda x: [g['name'] for g in eval(x)] if pd.notna(x) else []
-    )
-    
-    # 5. Save cleaned data
-    processed_path.parent.mkdir(parents=True, exist_ok=True)  # Create folder if missing
-    clean_data.to_csv(processed_path, index=False)
-    print(f"Data saved to: {processed_path}")
-    
-    return clean_data
-
-if __name__ == "__main__":
-    clean_anime_data()
+    """Cleans the raw anime data."""
+    print("--- Starting: 2. Data Cleaning ---")
+    if not os.path.exists(RAW_FILE_PATH):
+        print(f"❌ Error: Raw data file not found at '{RAW_FILE_PATH}'.")
+        return False
+    try:
+        df = pd.read_csv(RAW_FILE_PATH)
+        df_clean = df[['mal_id', 'title', 'type', 'score', 'genres']].copy()
+        df_clean.dropna(subset=['title', 'score'], inplace=True)
+        def parse_genres(genre_str):
+            try:
+                # ast.literal_eval is safer than eval()
+                genres_list = ast.literal_eval(genre_str)
+                return [g['name'] for g in genres_list if 'name' in g]
+            except (ValueError, SyntaxError):
+                return []
+        df_clean['genres'] = df_clean['genres'].apply(parse_genres)
+        os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
+        df_clean.to_csv(PROCESSED_FILE_PATH, index=False)
+        print(f"✓ Success: Cleaned data and saved to '{PROCESSED_FILE_PATH}'")
+        return True
+    except Exception as e:
+        print(f"❌ Error during data cleaning: {e}")
+        return False

@@ -1,7 +1,6 @@
 requests
-jupyter
 pandas
-sqlalchemy
-pymysql
-
-
+SQLAlchemy
+PyMySQL
+mysql-connector-python
+matplotlib

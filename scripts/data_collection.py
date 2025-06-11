@@ -1,48 +1,32 @@
+# scripts/data_collection.py
 import requests
 import pandas as pd
-from config import JIKAN_API_URL
-import time
+import os
+import config  # CORRECTED IMPORT
+
+RAW_DATA_DIR = "data/raw"
+RAW_FILE_PATH = os.path.join(RAW_DATA_DIR, "top_anime.csv")
 
 def fetch_top_anime():
-    """Fetch top anime from Jikan API"""
-    url = f"{JIKAN_API_URL}/top/anime"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()['data']
-    else:
-        print(f"Error fetching data: {response.status_code}")
-        return None
+    """Fetches top anime from the Jikan API and saves to a CSV file."""
+    print("--- Starting: 1. Data Collection ---")
+    url = f"{config.JIKAN_API_URL}/top/anime"  # Use config.JIKAN_API_URL
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json().get('data')
+        if not data:
+            print("❌ Error: No data found in API response.")
+            return False
 
-def fetch_anime_details(anime_id):
-    """Fetch detailed information for a specific anime"""
-    url = f"{JIKAN_API_URL}/anime/{anime_id}/full"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()['data']
-    else:
-        print(f"Error fetching details for anime {anime_id}: {response.status_code}")
-        return None
-
-def save_to_csv(data, filename):
-    """Save data to CSV"""
-    df = pd.DataFrame(data)
-    df.to_csv(f"data/raw/{filename}", index=False)
-
-def main():
-    # Fetch top anime
-    top_anime = fetch_top_anime()
-    if top_anime:
-        save_to_csv(top_anime, "top_anime.csv")
-        
-        # Fetch details for top 20 anime (to avoid rate limiting)
-        detailed_data = []
-        for anime in top_anime[:20]:
-            details = fetch_anime_details(anime['mal_id'])
-            if details:
-                detailed_data.append(details)
-            time.sleep(1)  # Respect API rate limits
-            
-        save_to_csv(detailed_data, "anime_details.csv")
-
-if __name__ == "__main__":
-    main()
+        os.makedirs(RAW_DATA_DIR, exist_ok=True)
+        df = pd.DataFrame(data)
+        df.to_csv(RAW_FILE_PATH, index=False)
+        print(f"✓ Success: Collected {len(df)} records and saved to '{RAW_FILE_PATH}'")
+        return True
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Error fetching data from API: {e}")
+        return False
+    except (KeyError, TypeError) as e:
+        print(f"❌ Error processing API response: {e}")
+        return False

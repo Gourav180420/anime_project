@@ -1,38 +1,29 @@
+# scripts/load_to_db.py
 import pandas as pd
+import os
 from sqlalchemy import create_engine, text
-from config import DB_CONFIG
 from urllib.parse import quote_plus
+import config  # CORRECTED IMPORT
 
-def load_data():
-    print("=== STARTING DATA LOAD ===")
+PROCESSED_FILE_PATH = "data/processed/cleaned_anime.csv"
 
+def load_data_to_db():
+    """Loads the cleaned data from a CSV file into the MySQL database."""
+    print("--- Starting: 3. Data Loading ---")
+    if not os.path.exists(PROCESSED_FILE_PATH):
+        print(f"❌ Error: Cleaned data file not found at '{PROCESSED_FILE_PATH}'.")
+        return False
     try:
-        # Encode password to handle special characters like '@'
-        password = quote_plus(DB_CONFIG["password"])
-
-        # Create SQLAlchemy engine
+        # Use config.DB_CONFIG
+        password = quote_plus(config.DB_CONFIG["password"])
         engine = create_engine(
-            f"mysql+pymysql://{DB_CONFIG['user']}:{password}@"
-            f"{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
+            f"mysql+pymysql://{config.DB_CONFIG['user']}:{password}@"
+            f"{config.DB_CONFIG['host']}:{config.DB_CONFIG['port']}/{config.DB_CONFIG['database']}"
         )
-        print("✓ Engine created")
-
-        # Connect and prepare the database
         with engine.connect() as conn:
-            print("✓ Connected to MySQL")
-
-            # Disable foreign key checks temporarily
-            conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
-
-            # Drop dependent table first to avoid foreign key errors
-            conn.execute(text("DROP TABLE IF EXISTS anime_genres"))
+            print("✓ Connected to MySQL database.")
             conn.execute(text("DROP TABLE IF EXISTS anime"))
-
-            # Re-enable foreign key checks
-            conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
-            print("✓ Database prepared")
-
-            # Create the anime table
+            print("✓ Dropped existing 'anime' table.")
             conn.execute(text("""
                 CREATE TABLE anime (
                     mal_id INT PRIMARY KEY,
@@ -42,20 +33,11 @@ def load_data():
                     genres TEXT
                 )
             """))
-            print("✓ Table created")
-
-        # Load CSV data
-        print("\nLoading CSV data...")
-        df = pd.read_csv("data/processed/cleaned_anime.csv")
-        print(f"✓ Loaded {len(df)} records")
-
-        # Load data into MySQL
-        print("\nWriting to database...")
-        df.to_sql(name="anime", con=engine, if_exists="replace", index=False)
-        print("✓ Data written successfully")
-
+            print("✓ Created new 'anime' table.")
+        df = pd.read_csv(PROCESSED_FILE_PATH)
+        df.to_sql('anime', con=engine, if_exists='append', index=False)
+        print(f"✓ Success: Loaded {len(df)} records into the 'anime' table.")
+        return True
     except Exception as e:
-        print("❌ ERROR:", e)
-
-# Run the function
-load_data()
+        print(f"❌ Error during data loading: {e}")
+        return False
